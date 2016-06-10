@@ -1,0 +1,30 @@
+function initNotification() {
+	var wnotif = getWebNotif();
+	if(wnotif) {
+		MSWNA = wnotif;
+	}
+	else (!wnotif)
+      MSWNA.init(NOTIFICATION_ENDPOINT, notifServName);  
+}
+
+function getWebNotif() {
+	var wnotif;
+	if(window.top.opener) {
+		wnotif = window.top.opener.MSWNA;
+		if(wnotif) {
+			alert('opener notication object is used');
+			return wnotif;
+		}			
+	}
+	if(typeof(WebSocket) !== "function") {
+		var pw = window;
+		while (pw.parent && pw.parent !== pw.self) {
+			pw = pw.parent;
+			if(pw.MSWNA && pw.MSWNA.wskt) {
+				wnotif = pw.MSWNA;
+				break;
+			}
+		}
+	}	
+	return wnotif;
+}
